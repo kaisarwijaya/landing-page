@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: landing-page
-        image: kaisarwijaya/landing-page
+        image: kaisarwijaya/landing-production
         ports:
         - containerPort: 80
 ---
