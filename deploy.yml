@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: landing-page
+  namespace: production
+spec:
+  selector:
+    app: landing-page
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: landing-page
+  labels:
+    app: landing-page
+  namespace: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: landing-page
+  template:
+    metadata:
+      labels:
+        app: landing-page
+    spec:
+      containers:
+      - name: landing-page
+        image: kaisarwijaya/landing-page:versi
+        ports:
+        - containerPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: landing-ingress
+  namespace: production
+  annotations:
+   #nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  rules:
+  - host: landing.sarisalju.com
+    http:
+      paths:
+      - backend:
+          serviceName: landing-page
+          servicePort: 80
